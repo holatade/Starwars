@@ -18,9 +18,6 @@ axios.interceptors.response.use(undefined, (error) => {
 
 const responseBody = (response) => response.data;
 
-const sleep = (delayTime) => (response) =>
-  new Promise((resolve) => setTimeout(() => resolve(response), delayTime));
-
 const requests = {
   get: (url) => axios.get(url).then(responseBody)
 };

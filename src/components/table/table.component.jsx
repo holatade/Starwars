@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const Table = ({ characters }) => {
     const [sortNameAscending, setSortNameAscending] = useState(true);
@@ -6,15 +6,12 @@ const Table = ({ characters }) => {
     const [sortHeightAscending, setSortHeightAscending] = useState(true)
     const [chararacter, setCharacter] = useState(characters);
     const [filteredChar, setFilteredChar] = useState(characters);
-    const [total, setTotalInfo] = useState({});
 
-    useEffect(() => {
-        var tol = totalHeight()
-        setTotalInfo({
-            height: tol,
-            totalCount : filteredChar.length
-        });       
-    }, [filteredChar]);
+    const tol = (total) => {
+        let heightInc = Math.round((total * 0.393700787+ Number.EPSILON) * 100) /100;
+        let heightFt = Math.round((total * 0.032808399 + Number.EPSILON) * 100) /100;
+        return `${total} cm (${heightFt}ft /  ${heightInc}in)`
+    }
 
     // sort characters by name
     const sortName = () => {
@@ -47,30 +44,21 @@ const Table = ({ characters }) => {
         });
     }
 
-    // Get characters total height
-    const totalHeight = () =>{
-        let heightCm = filteredChar.reduce((x, y) => x + y.height,0);
-        let heightInc = Math.round((heightCm * 0.393700787+ Number.EPSILON) * 100) /100;
-        let heightFt = Math.round((heightCm * 0.032808399 + Number.EPSILON) * 100) /100;
-
-        return `${heightCm} cm (${heightFt}ft /
-        ${heightInc}in)`
-    }
-
     //Filter characters by gender
     const filterCharacters = async (e) => {
         var value = e.target.value;
-        if(value == "all"){
+        if(value === "all"){
             setFilteredChar(chararacter)
             return;
         }
         let filteredCharacter = chararacter.filter((item) => {
-            return  item.gender == value
+            return  item.gender === value
         })
         setFilteredChar(filteredCharacter)
     }
 
-  if(chararacter.length > 0){
+  if(characters.length > 0){
+      console.log(filteredChar);
     return (
         <div className="mt-4 mb-3 mx-auto"  style={{ width: '70%' }}>
              <select  className="my-2" id="films" name="cars" onChange={filterCharacters}>
@@ -94,11 +82,8 @@ const Table = ({ characters }) => {
                         <tr key={index} style={{ border: "1px solid yellow" }} >
                             <th scope="row">{index+1}</th>
                             <td>{char.name}</td>
-                            <td>{char.gender == "male" ? (<span className="iconify" data-icon="fontisto:male"
-                                data-width="20" alt="male"></span>) : char.gender == "female" ? (<span className="iconify"
-                                    data-icon="foundation:torso-female" data-width="30" alt="female"></span>) : char.gender ==
-                                        "n/a" ? (<span className="iconify" data-icon="wi:na" data-width="30" alt="N/A"></span>) :
-                                (<span className="iconify" data-icon="healthicons:female-and-male" data-width="30" alt="Amhaphrodite"></span>)}{char.gender}</td>
+                            <td>{char.gender === "male" ? "Male" : char.gender === "female" ? "Female" : char.gender ===
+                                        "n/a" ? "N/A" : "Amaphrodite"}</td>
                             <td>{char.height}</td>
                         </tr>
                     ))}
@@ -106,9 +91,9 @@ const Table = ({ characters }) => {
                 <tfoot  style={{ color: "yellow" }}>
                     <tr>
                         <th></th>
-                        <th>{total.totalCount}</th>
+                        <th>{filteredChar.length}</th>
                         <th></th>
-                        <th>{total.height}</th>
+                        <th>{tol(filteredChar.reduce((x, y) => x + y.height,0))}</th>
                     </tr>
                 </tfoot>
             </table>
