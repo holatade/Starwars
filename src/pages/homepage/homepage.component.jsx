@@ -41,7 +41,6 @@ const HomePage = () => {
             episode: "Episode " + film.episode_id,
             opening_crawl: film.opening_crawl
         };
-        setSelectedFilm(selectFilm);
 
         let characterData = [];
         var charactersLinks = film.characters;
@@ -57,8 +56,10 @@ const HomePage = () => {
                 };
                 characterData.push(charObj);
                 setCharacters(characterData);
+                setSelectedFilm(selectFilm);
             })
-        ).then(() => {
+        ).catch((err) => alert(err) )
+        .then(() => {
             setLoading(false);
         })
     }

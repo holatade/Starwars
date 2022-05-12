@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 
 const Table = ({ characters }) => {
     const [sortNameAscending, setSortNameAscending] = useState(true);
     const [sortGenderAscending, setSortGenderAscending] = useState(true)
     const [sortHeightAscending, setSortHeightAscending] = useState(true)
-    const [chararacter, setCharacter] = useState(characters);
-    const [filteredChar, setFilteredChar] = useState(characters);
+    const [filteredChar, setFilteredChar] = useState([]);
+
+    useEffect(() => {
+        console.log(characters)
+        setFilteredChar(characters)
+    }, []);
 
     const tol = (total) => {
         let heightInc = Math.round((total * 0.393700787+ Number.EPSILON) * 100) /100;
@@ -48,17 +52,15 @@ const Table = ({ characters }) => {
     const filterCharacters = async (e) => {
         var value = e.target.value;
         if(value === "all"){
-            setFilteredChar(chararacter)
+            setFilteredChar(characters)
             return;
         }
-        let filteredCharacter = chararacter.filter((item) => {
+        let filteredCharacter = characters.filter((item) => {
             return  item.gender === value
         })
         setFilteredChar(filteredCharacter)
     }
 
-  if(characters.length > 0){
-      console.log(filteredChar);
     return (
         <div className="mt-4 mb-3 mx-auto"  style={{ width: '70%' }}>
              <select  className="my-2" id="films" name="cars" onChange={filterCharacters}>
@@ -99,10 +101,6 @@ const Table = ({ characters }) => {
             </table>
         </div>
     )
-
-  }
-    
-
 }
 
 export default Table;
